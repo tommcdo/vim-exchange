@@ -5,7 +5,7 @@ function! s:exchange_set(type, ...)
 
 	if !exists('b:exchange_text')
 		if a:0
-			call s:store_pos(a:normal, "'<", "'>")
+			call s:store_pos(a:type, "'<", "'>")
 			silent exe "normal! `<" . a:type . "`>y"
 		elseif a:type == 'line'
 			call s:store_pos('V', "'[", "']")
