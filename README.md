@@ -1,7 +1,7 @@
 exchange.vim
 ============
 
-Easy text exchange operator for Vim. Coming soon.
+Easy text exchange operator for Vim.
 
 Mappings
 --------
