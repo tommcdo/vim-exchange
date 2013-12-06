@@ -1,69 +1,84 @@
 function! s:exchange_set(type, ...)
-	let sel_save = &selection
-	let &selection = "inclusive"
-	let reg_save = @@
-
-	if !exists('b:exchange_text')
-		if a:0
-			call s:store_pos(a:type, "'<", "'>")
-			silent exe "normal! `<" . a:type . "`>y"
-		elseif a:type == 'line'
-			call s:store_pos('V', "'[", "']")
-			silent exe "normal! '[V']y"
-		elseif a:type == 'block'
-			call s:store_pos('\<C-V>', "'[", "']")
-			silent exe "normal! `[\<C-V>`]y"
-		else
-			call s:store_pos('v', "'[", "']")
-			silent exe "normal! `[v`]y"
-		endif
-		let b:exchange_text = @@
+	if !exists('b:exchange')
+		let b:exchange = s:get_exchange(a:type, a:0)
 	else
-		let @@ = b:exchange_text
-		if a:0
-			silent exe "normal! `<" . a:type . "`>y"
-		elseif a:type == 'line'
-			silent exe "normal! '[V']y"
-		elseif a:type == 'block'
-			silent exe "normal! `[\<C-V>`]y"
-		else
-			silent exe "normal! `[v`]y"
+		let exchange1 = b:exchange
+		let exchange2 = s:get_exchange(a:type, a:0)
+
+		let cmp = s:compare(exchange1, exchange2)
+		if cmp == 0
+			echoerr "Exchange aborted: overlapping text"
+		elseif cmp > 0
+			let [exchange1, exchange2] = [exchange2, exchange1]
 		endif
-		let exchange_text = @@
-		let @@ = b:exchange_text
-		silent exe "normal! gvp"
-		let @@ = exchange_text
-		call s:exchange()
+
+		call s:exchange(exchange1, exchange2)
 		call s:exchange_clear()
 	endif
-
-	let &selection = sel_save
-	let @@ = reg_save
 endfunction
 
-function! s:exchange()
-	let x = getpos("'x")
+" Return -1 if x comes before y in buffer,
+"         0 if x and y overlap in buffer,
+"         1 if x comes after y in buffer
+function! s:compare(x, y)
+	let [xs, xe, ys, ye] = [a:x[2], a:x[3], a:y[2], a:y[3]]
+	" TODO: Write this function
+	return -1
+endfunction
+
+function! s:exchange(x, y)
 	let a = getpos("'a")
 	let b = getpos("'b")
-	call setpos("'a", b:exchange_start)
-	call setpos("'b", b:exchange_end)
-	silent exe "normal! mx`a" . b:exchange_mode . "`bp`x"
+	let reg = @@
+
+	call setpos("'a", a:y[2])
+	call setpos("'b", a:y[3])
+	let @@ = a:x[0]
+	silent exe "normal! `a" . a:y[1] . "`bp"
+
+	call setpos("'a", a:x[2])
+	call setpos("'b", a:x[3])
+	let @@ = a:y[0]
+	silent exe "normal! `a" . a:x[1] . "`bp"
+
 	call setpos("'a", a)
 	call setpos("'b", b)
-	call setpos("'x", x)
+	let @@ = reg
 endfunction
 
-function! s:store_pos(mode, start, end)
-	let b:exchange_mode = a:mode
-	let b:exchange_start = getpos(a:start)
-	let b:exchange_end = getpos(a:end)
+function! s:get_exchange(type, vis)
+	let reg = @@
+	let selection = &selection
+	let &selection = 'inclusive'
+	if a:vis
+		let type = a:type
+		let [start, end] = s:store_pos("'<", "'>")
+		silent exe "normal! `<" . a:type . "`>y"
+	elseif a:type == 'line'
+		let type = 'V'
+		let [start, end] = s:store_pos("'[", "']")
+		silent exe "normal! '[V']y"
+	elseif a:type == 'block'
+		let type = '\<C-V>'
+		let [start, end] = s:store_pos("'[", "']")
+		silent exe "normal! `[\<C-V>`]y"
+	else
+		let type = 'v'
+		let [start, end] = s:store_pos("'[", "']")
+		silent exe "normal! `[v`]y"
+	endif
+	let text = @@
+	let @@ = reg
+	let &selection = selection
+	return [text, type, start, end]
+endfunction
+
+function! s:store_pos(start, end)
+	return [getpos(a:start), getpos(a:end)]
 endfunction
 
 function! s:exchange_clear()
-	unlet! b:exchange_mode
-	unlet! b:exchange_start
-	unlet! b:exchange_end
-	unlet! b:exchange_text
+	unlet! b:exchange
 endfunction
 
 nnoremap <silent> <Plug>Exchange :<C-u>set opfunc=<SID>exchange_set<CR>g@
