@@ -1,31 +1,3 @@
-function! s:exchange_set(type, ...)
-	if !exists('b:exchange')
-		let b:exchange = s:get_exchange(a:type, a:0)
-	else
-		let exchange1 = b:exchange
-		let exchange2 = s:get_exchange(a:type, a:0)
-
-		let cmp = s:compare(exchange1, exchange2)
-		if cmp == 0
-			echoerr "Exchange aborted: overlapping text"
-		elseif cmp > 0
-			let [exchange1, exchange2] = [exchange2, exchange1]
-		endif
-
-		call s:exchange(exchange1, exchange2)
-		call s:exchange_clear()
-	endif
-endfunction
-
-" Return -1 if x comes before y in buffer,
-"         0 if x and y overlap in buffer,
-"         1 if x comes after y in buffer
-function! s:compare(x, y)
-	let [xs, xe, ys, ye] = [a:x[2], a:x[3], a:y[2], a:y[3]]
-	" TODO: Write this function
-	return -1
-endfunction
-
 function! s:exchange(x, y)
 	let a = getpos("'a")
 	let b = getpos("'b")
@@ -46,7 +18,7 @@ function! s:exchange(x, y)
 	let @@ = reg
 endfunction
 
-function! s:get_exchange(type, vis)
+function! s:exchange_get(type, vis)
 	let reg = @@
 	let selection = &selection
 	let &selection = 'inclusive'
@@ -73,12 +45,40 @@ function! s:get_exchange(type, vis)
 	return [text, type, start, end]
 endfunction
 
-function! s:store_pos(start, end)
-	return [getpos(a:start), getpos(a:end)]
+function! s:exchange_set(type, ...)
+	if !exists('b:exchange')
+		let b:exchange = s:exchange_get(a:type, a:0)
+	else
+		let exchange1 = b:exchange
+		let exchange2 = s:exchange_get(a:type, a:0)
+
+		let cmp = s:compare(exchange1, exchange2)
+		if cmp == 0
+			echoerr "Exchange aborted: overlapping text"
+		elseif cmp > 0
+			let [exchange1, exchange2] = [exchange2, exchange1]
+		endif
+
+		call s:exchange(exchange1, exchange2)
+		call s:exchange_clear()
+	endif
 endfunction
 
 function! s:exchange_clear()
 	unlet! b:exchange
+endfunction
+
+" Return -1 if x comes before y in buffer,
+"         0 if x and y overlap in buffer,
+"         1 if x comes after y in buffer
+function! s:compare(x, y)
+	let [xs, xe, ys, ye] = [a:x[2], a:x[3], a:y[2], a:y[3]]
+	" TODO: Write this function
+	return -1
+endfunction
+
+function! s:store_pos(start, end)
+	return [getpos(a:start), getpos(a:end)]
 endfunction
 
 nnoremap <silent> <Plug>Exchange :<C-u>set opfunc=<SID>exchange_set<CR>g@
