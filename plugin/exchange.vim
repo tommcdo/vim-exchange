@@ -42,13 +42,15 @@ function! s:exchange_set(type, ...)
 endfunction
 
 function! s:exchange()
+	let x = getpos("'x")
 	let a = getpos("'a")
 	let b = getpos("'b")
 	call setpos("'a", b:exchange_start)
 	call setpos("'b", b:exchange_end)
-	silent exe "normal! `a" . b:exchange_mode . "`bp"
+	silent exe "normal! mx`a" . b:exchange_mode . "`bp`x"
 	call setpos("'a", a)
 	call setpos("'b", b)
+	call setpos("'x", x)
 endfunction
 
 function! s:store_pos(mode, start, end)
