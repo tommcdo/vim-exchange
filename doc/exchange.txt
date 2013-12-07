@@ -1,0 +1,49 @@
+*exchange.txt*  Plugin to define a text exchange operator
+
+Author: Tom McDonald <http://tommcdo.com>
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+INTRODUCTION                                    *exchange*
+
+This plugin provides |operators| for exchanging text in two places. The main
+operator is |cx|, which is used in pairs. Each time it is used, it defines
+a region of text to to be exchanged; on the second use, the two defined regions
+are exchanged.
+
+MAPPINGS                                        *exchange-mappings*
+
+                                                *cx* *exchange-define*
+cx{motion}              Used in pairs.
+                        FIRST USE: define the first region of text to be
+                        exchanged. Any valid {motion} can be used.
+                        SECOND USE: define the second region of text and
+                        perform the exchange.
+                        Note: If a region was defined accidentally, it can
+                        be cleared with |cxc|
+
+                                                *cxc* *exchange-clear*
+cxc                     Clear any defined region of text (previously defined
+                        by a |cx| command)
+
+EXAMPLES                                        *exchange-examples*
+
+In the text below, we will exchange everything inside the parentheses with
+everything inside the double quotes.
+
+    Tom "a Vim plugin developer" McDonald (The Dev)
+
+First, place your cursor somewhere inside the quoted string and type `cxi"`.
+Then move your cursor to somewhere inside the parentheses and type `cxi)`. The
+text will the be changed to:
+
+    Tom "The Dev" McDonald (a Vim plugin developer)
+
+It should be noted that I don't actually go by that nickname.
+
+ISSUES AND TODO                                 *lion-issues* *lion-todo*
+
+See https://github.com/tommcdo/vim-exchange/issues for bugs and issues.
+
+ vim:tw=78:ts=8:ft=help:norl:
