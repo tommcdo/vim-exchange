@@ -21,3 +21,16 @@ Example
 To exchange two words, place your cursor on the first word and type `cxiw`.
 Then move to the second word and type `cxiw` again. Note: the {motion} used in
 the first and second use of `cx` don't have to be the same.
+
+Installation
+------------
+
+If you don't have a preferred installation method, I recommend
+installing [pathogen.vim](https://github.com/tpope/vim-pathogen), and
+then simply copy and paste:
+
+    cd ~/.vim/bundle
+    git clone git://github.com/tommcdo/vim-exchange.git
+
+Once help tags have been generated, you can view the manual with
+`:help exchange`.
