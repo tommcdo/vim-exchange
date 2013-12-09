@@ -17,4 +17,4 @@ Clear any {motion} pending for exchange.
 Example
 -------
 
-To exchanges two words, place your cursor on the first word and type `cxiw`. Then move to the second word and type `cxiw` again. Note: the {motion} used in the first and second use of `cx` don't have to be the same.
+To exchange two words, place your cursor on the first word and type `cxiw`. Then move to the second word and type `cxiw` again. Note: the {motion} used in the first and second use of `cx` don't have to be the same.
