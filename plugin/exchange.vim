@@ -54,7 +54,8 @@ function! s:exchange_set(type, ...)
 
 		let cmp = s:compare(exchange1, exchange2)
 		if cmp == 0
-			echoerr "Exchange aborted: overlapping text"
+			echohl WarningMsg | echo "Exchange aborted: overlapping text" | echohl None
+			return s:exchange_clear()
 		elseif cmp > 0
 			let [exchange1, exchange2] = [exchange2, exchange1]
 		endif
@@ -68,13 +69,36 @@ function! s:exchange_clear()
 	unlet! b:exchange
 endfunction
 
-" Return -1 if x comes before y in buffer,
-"         0 if x and y overlap in buffer,
-"         1 if x comes after y in buffer
+" Return < 0 if x comes before y in buffer,
+"        = 0 if x and y overlap in buffer,
+"        > 0 if x comes after y in buffer
 function! s:compare(x, y)
-	let [xs, xe, ys, ye] = [a:x[2], a:x[3], a:y[2], a:y[3]]
-	" TODO: Write this function
-	return -1
+	let [xs, xe, xm, ys, ye, ym] = [a:x[2], a:x[3], a:x[1], a:y[2], a:y[3], a:y[1]]
+	let xe = s:apply_mode(xe, xm)
+	let ye = s:apply_mode(ye, ym)
+
+	if (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
+		" x and y overlap in buffer.
+		return 0
+	endif
+
+	return s:compare_pos(xs, ys)
+endfunction
+
+function! s:compare_pos(x, y)
+	if a:x[1] == a:y[1]
+		return a:x[2] - a:y[2]
+	else
+		return a:x[1] - a:y[1]
+	endif
+endfunction
+
+function! s:apply_mode(pos, mode)
+	let pos = a:pos
+	if a:mode == 'V'
+		let pos[2] = col([pos[1], '$'])
+	endif
+	return pos
 endfunction
 
 function! s:store_pos(start, end)
