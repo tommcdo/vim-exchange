@@ -112,3 +112,4 @@ nnoremap <silent> <Plug>ExchangeClear :<C-u>call <SID>exchange_clear()<CR>
 nmap cx <Plug>Exchange
 vmap cx <Plug>Exchange
 nmap cxc <Plug>ExchangeClear
+nmap cxx cx_
