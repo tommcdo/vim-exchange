@@ -11,6 +11,10 @@ Mappings
 On the first use, define the first {motion} to exchange. On the second use,
 define the second {motion} and perform the exchange.
 
+`cxx`
+
+Like `cx`, but use the current line.
+
 `cxc`
 
 Clear any {motion} pending for exchange.

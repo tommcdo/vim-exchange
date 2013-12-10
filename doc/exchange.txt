@@ -23,6 +23,9 @@ cx{motion}              Used in pairs.
                         Note: If a region was defined accidentally, it can
                         be cleared with |cxc|
 
+                                                *cxx* *exchange-define-line*
+cxx                     Like |cx|, but for the current line. |linewise|
+
                                                 *cxc* *exchange-clear*
 cxc                     Clear any defined region of text (previously defined
                         by a |cx| command)
