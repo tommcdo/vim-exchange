@@ -95,7 +95,7 @@ endfunction
 
 function! s:apply_mode(pos, mode)
 	let pos = a:pos
-	if a:mode == 'V'
+	if a:mode ==# 'V'
 		let pos[2] = col([pos[1], '$'])
 	endif
 	return pos
