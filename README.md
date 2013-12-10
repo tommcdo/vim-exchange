@@ -11,6 +11,8 @@ Mappings
 On the first use, define the first {motion} to exchange. On the second use,
 define the second {motion} and perform the exchange.
 
+The operator can also be used from visual mode.
+
 `cxx`
 
 Like `cx`, but use the current line.
