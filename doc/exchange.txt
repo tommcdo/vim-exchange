@@ -58,7 +58,8 @@ You are then free to define your own. The default mappings are as follows:
     nmap cxc <Plug>ExchangeClear
     nmap cxx <Plug>ExchangeLine
 
-ISSUES AND TODO                                 *lion-issues* *lion-todo*
+ISSUES AND TODO                                 *exchange-issues*
+                                                *exchange-todo*
 
 See https://github.com/tommcdo/vim-exchange/issues for bugs and issues.
 
