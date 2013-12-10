@@ -45,6 +45,19 @@ text will the be changed to:
 
 It should be noted that I don't actually go by that nickname.
 
+SETTINGS                                        *exchange-settings*
+
+                                                *g:exchange_no_mappings*
+g:exchange_no_mappings ~
+
+If this variable is defined, the default keyboard mappings will not be loaded.
+You are then free to define your own. The default mappings are as follows:
+
+    nmap cx <Plug>Exchange
+    vmap cx <Plug>Exchange
+    nmap cxc <Plug>ExchangeClear
+    nmap cxx <Plug>ExchangeLine
+
 ISSUES AND TODO                                 *lion-issues* *lion-todo*
 
 See https://github.com/tommcdo/vim-exchange/issues for bugs and issues.
