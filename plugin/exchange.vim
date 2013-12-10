@@ -108,8 +108,9 @@ endfunction
 nnoremap <silent> <Plug>Exchange :<C-u>set opfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>Exchange :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>ExchangeClear :<C-u>call <SID>exchange_clear()<CR>
+nnoremap <silent> <Plug>ExchangeLine :<C-u>set opfunc=<SID>exchange_set<CR>g@_
 
 nmap cx <Plug>Exchange
 vmap cx <Plug>Exchange
 nmap cxc <Plug>ExchangeClear
-nmap cxx cx_
+nmap cxx <Plug>ExchangeLine
