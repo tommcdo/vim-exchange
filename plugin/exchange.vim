@@ -6,12 +6,12 @@ function! s:exchange(x, y)
 	call setpos("'a", a:y[2])
 	call setpos("'b", a:y[3])
 	let @@ = a:x[0]
-	silent exe "normal! `a" . a:y[1] . "`bp"
+	silent exe "normal! `a" . a:y[1] . "`b\"\"p"
 
 	call setpos("'a", a:x[2])
 	call setpos("'b", a:x[3])
 	let @@ = a:y[0]
-	silent exe "normal! `a" . a:x[1] . "`bp"
+	silent exe "normal! `a" . a:x[1] . "`b\"\"p"
 
 	call setpos("'a", a)
 	call setpos("'b", b)
