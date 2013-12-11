@@ -41,7 +41,7 @@ function! s:exchange_get(type, vis)
 		let [start, end] = s:store_pos("'[", "']")
 		silent exe "normal! `[v`]y"
 	endif
-	let text = @@
+	let text = getreg('@')
 	call setreg('"', reg, reg_mode)
 	let &selection = selection
 	return [text, type, start, end]
