@@ -11,8 +11,6 @@ Mappings
 On the first use, define the first {motion} to exchange. On the second use,
 define the second {motion} and perform the exchange.
 
-The operator can also be used from visual mode.
-
 `cxx`
 
 Like `cx`, but use the current line.
@@ -20,6 +18,13 @@ Like `cx`, but use the current line.
 `cxc`
 
 Clear any {motion} pending for exchange.
+
+### Notes about the mappings
+
+* `cx` can also be used from visual mode, which is sometimes easier than coming
+  up with the right {motion}
+* If you're using the same motion again (e.g. exchanging two words using
+  `cxiw`), you can use `.` the second time.
 
 Example
 -------
