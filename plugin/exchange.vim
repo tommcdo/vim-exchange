@@ -1,27 +1,27 @@
 function! s:exchange(x, y)
 	let a = getpos("'a")
 	let b = getpos("'b")
-	let reg = getreg('@')
-	let reg_mode = getregtype('@')
+	let reg = getreg('"')
+	let reg_mode = getregtype('"')
 
 	call setpos("'a", a:y[2])
 	call setpos("'b", a:y[3])
-	call setreg('@', a:x[0], a:x[1])
+	call setreg('"', a:x[0], a:x[1])
 	silent exe "normal! `a" . a:y[1] . "`b\"\"p"
 
 	call setpos("'a", a:x[2])
 	call setpos("'b", a:x[3])
-	call setreg('@', a:y[0], a:y[1])
+	call setreg('"', a:y[0], a:y[1])
 	silent exe "normal! `a" . a:x[1] . "`b\"\"p"
 
 	call setpos("'a", a)
 	call setpos("'b", b)
-	call setreg('@', reg, reg_mode)
+	call setreg('"', reg, reg_mode)
 endfunction
 
 function! s:exchange_get(type, vis)
-	let reg = getreg('@')
-	let reg_mode = getregtype('@')
+	let reg = getreg('"')
+	let reg_mode = getregtype('"')
 	let selection = &selection
 	let &selection = 'inclusive'
 	if a:vis
@@ -42,7 +42,7 @@ function! s:exchange_get(type, vis)
 		silent exe "normal! `[v`]y"
 	endif
 	let text = @@
-	call setreg('@', reg, reg_mode)
+	call setreg('"', reg, reg_mode)
 	let &selection = selection
 	return [text, type, start, end]
 endfunction
