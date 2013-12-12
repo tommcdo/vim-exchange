@@ -33,7 +33,7 @@ function! s:exchange_get(type, vis)
 		let [start, end] = s:store_pos("'[", "']")
 		silent exe "normal! '[V']y"
 	elseif a:type == 'block'
-		let type = '\<C-V>'
+		let type = "\<C-V>"
 		let [start, end] = s:store_pos("'[", "']")
 		silent exe "normal! `[\<C-V>`]y"
 	else
