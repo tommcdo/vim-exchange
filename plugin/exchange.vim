@@ -79,6 +79,20 @@ function! s:compare(x, y)
 	let xe = s:apply_mode(xe, xm)
 	let ye = s:apply_mode(ye, ym)
 
+	" Compare two blockwise regions.
+	if xm == "\<C-V>" && ym == "\<C-V>"
+		if s:intersects(xs, xe, ys, ye)
+			return 0
+		endif
+		let cmp = xs[2] - ys[2]
+		return cmp == 0 ? -1 : cmp
+	endif
+
+	" TODO: Compare a blockwise region with a linewise or characterwise region.
+	" NOTE: Comparing blockwise with characterwise has one exception:
+	"       When the characterwise region spans only one line, it is like blockwise.
+
+	" Compare two linewise or characterwise regions.
 	if (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
 		" x and y overlap in buffer.
 		return 0
@@ -92,6 +106,14 @@ function! s:compare_pos(x, y)
 		return a:x[2] - a:y[2]
 	else
 		return a:x[1] - a:y[1]
+	endif
+endfunction
+
+function! s:intersects(xs, xe, ys, ye)
+	if a:xe[2] < a:ys[2] || a:xe[1] < a:ys[1] || a:xs[2] > a:ye[2] || a:xs[1] > a:ye[1]
+		return 0
+	else
+		return 1
 	endif
 endfunction
 
