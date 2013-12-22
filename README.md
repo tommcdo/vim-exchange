@@ -56,7 +56,7 @@ Set `'timeoutlen'` to a smaller value so that the delay is less noticeable.
 Change the default visual mapping to something that doesn't begin with `c` (or
 any other existing operator).
 
-    vmap <Leader>cx <Plug>Exchange
+    vmap <Leader>cx <Plug>(Exchange)
 
 [iss11]: https://github.com/tommcdo/vim-exchange/issues/11
 [timeoutlen]: http://vimdoc.sourceforge.net/htmldoc/options.html#'timeoutlen'

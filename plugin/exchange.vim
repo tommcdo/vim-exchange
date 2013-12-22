@@ -135,16 +135,16 @@ function! s:create_map(mode, lhs, rhs)
 	endif
 endfunction
 
-nnoremap <silent> <Plug>Exchange :<C-u>set opfunc=<SID>exchange_set<CR>g@
-vnoremap <silent> <Plug>Exchange :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
-nnoremap <silent> <Plug>ExchangeClear :<C-u>call <SID>exchange_clear()<CR>
-nnoremap <silent> <Plug>ExchangeLine :<C-u>set opfunc=<SID>exchange_set<CR>g@_
+nnoremap <silent> <Plug>(Exchange) :<C-u>set opfunc=<SID>exchange_set<CR>g@
+vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
+nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
+nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set opfunc=<SID>exchange_set<CR>g@_
 
 if exists('g:exchange_no_mappings')
 	finish
 endif
 
-call s:create_map('n', 'cx', '<Plug>Exchange')
-call s:create_map('v', 'cx', '<Plug>Exchange')
-call s:create_map('n', 'cxc', '<Plug>ExchangeClear')
-call s:create_map('n', 'cxx', '<Plug>ExchangeLine')
+call s:create_map('n', 'cx', '<Plug>(Exchange)')
+call s:create_map('v', 'cx', '<Plug>(Exchange)')
+call s:create_map('n', 'cxc', '<Plug>(ExchangeClear)')
+call s:create_map('n', 'cxx', '<Plug>(ExchangeLine)')

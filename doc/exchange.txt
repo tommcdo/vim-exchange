@@ -51,14 +51,14 @@ SETTINGS                                        *exchange-settings*
 To change the default mappings, simply provide your own mappings to the
 commands below. The default mappings are as follows:
 
-    nmap cx <Plug>Exchange
-    vmap cx <Plug>Exchange
-    nmap cxc <Plug>ExchangeClear
-    nmap cxx <Plug>ExchangeLine
+    nmap cx <Plug>(Exchange)
+    vmap cx <Plug>(Exchange)
+    nmap cxc <Plug>(ExchangeClear)
+    nmap cxx <Plug>(ExchangeLine)
 
 For example, to change the mapping for exchanging a line, use the following:
 
-    nmap cX <Plug>ExchangeLine
+    nmap cX <Plug>(ExchangeLine)
 
 This will use the mapping `cX`, and the default `cxx` will not be mapped.
 
