@@ -147,4 +147,4 @@ endif
 call s:create_map('n', 'cx', '<Plug>Exchange')
 call s:create_map('v', 'cx', '<Plug>Exchange')
 call s:create_map('n', 'cxc', '<Plug>ExchangeClear')
-call s:create_map('v', 'cxx', '<Plug>ExchangeLine')
+call s:create_map('n', 'cxx', '<Plug>ExchangeLine')
