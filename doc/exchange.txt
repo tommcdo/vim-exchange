@@ -48,16 +48,24 @@ It should be noted that I don't actually go by that nickname.
 
 SETTINGS                                        *exchange-settings*
 
-                                                *g:exchange_no_mappings*
-g:exchange_no_mappings ~
-
-If this variable is defined, the default keyboard mappings will not be loaded.
-You are then free to define your own. The default mappings are as follows:
+To change the default mappings, simply provide your own mappings to the
+commands below. The default mappings are as follows:
 
     nmap cx <Plug>Exchange
     vmap cx <Plug>Exchange
     nmap cxc <Plug>ExchangeClear
     nmap cxx <Plug>ExchangeLine
+
+For example, to change the mapping for exchanging a line, use the following:
+
+    nmap cX <Plug>ExchangeLine
+
+This will use the mapping `cX`, and the default `cxx` will not be mapped.
+
+                                                *g:exchange_no_mappings*
+g:exchange_no_mappings ~
+
+If this variable is defined, the default mappings will not be created.
 
 ISSUES AND TODO                                 *exchange-issues*
                                                 *exchange-todo*
