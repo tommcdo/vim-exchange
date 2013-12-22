@@ -129,6 +129,12 @@ function! s:store_pos(start, end)
 	return [getpos(a:start), getpos(a:end)]
 endfunction
 
+function! s:create_map(mode, lhs, rhs)
+	if !hasmapto(a:rhs, a:mode)
+		execute a:mode.'map '.a:lhs.' '.a:rhs
+	endif
+endfunction
+
 nnoremap <silent> <Plug>Exchange :<C-u>set opfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>Exchange :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>ExchangeClear :<C-u>call <SID>exchange_clear()<CR>
@@ -138,7 +144,7 @@ if exists('g:exchange_no_mappings')
 	finish
 endif
 
-nmap cx <Plug>Exchange
-vmap cx <Plug>Exchange
-nmap cxc <Plug>ExchangeClear
-nmap cxx <Plug>ExchangeLine
+call s:create_map('n', 'cx', '<Plug>Exchange')
+call s:create_map('v', 'cx', '<Plug>Exchange')
+call s:create_map('n', 'cxc', '<Plug>ExchangeClear')
+call s:create_map('v', 'cxx', '<Plug>ExchangeLine')
