@@ -50,6 +50,7 @@ endfunction
 function! s:exchange_set(type, ...)
 	if !exists('b:exchange')
 		let b:exchange = s:exchange_get(a:type, a:0)
+		let b:exchange_matches = s:highlight(b:exchange)
 	else
 		let exchange1 = b:exchange
 		let exchange2 = s:exchange_get(a:type, a:0)
@@ -69,6 +70,45 @@ endfunction
 
 function! s:exchange_clear()
 	unlet! b:exchange
+	if exists('b:exchange_matches')
+		call s:highlight_clear(b:exchange_matches)
+		unlet b:exchange_matches
+	endif
+endfunction
+
+function! s:highlight(exchange)
+	let [text, type, start, end] = a:exchange
+	let regions = []
+	if type == "\<C-V>"
+		let blockstartcol = virtcol([start[1], start[2]])
+		let blockendcol = virtcol([end[1], end[2]])
+		if blockstartcol > blockendcol
+			let [blockstartcol, blockendcol] = [blockendcol, blockstartcol]
+		endif
+		let regions += map(range(start[1], end[1]), '[v:val, blockstartcol, v:val, blockendcol]')
+	else
+		let [startline, endline] = [start[1], end[1]]
+		if type ==# 'v'
+			let startcol = virtcol([startline, start[2]])
+			let endcol = virtcol([endline, end[2]])
+		elseif type ==# 'V'
+			let startcol = 1
+			let endcol = virtcol([end[1], '$'])
+		endif
+		let regions += [[startline, startcol, endline, endcol]]
+	endif
+	return map(regions, 's:highlight_region(v:val)')
+endfunction
+
+function! s:highlight_region(region)
+	let pattern = '\%'.a:region[0].'l\%'.a:region[1].'v\_.\{-}\%'.a:region[2].'l\(\%>'.a:region[3].'v\|$\)'
+	return matchadd('ExchangeRegion', pattern)
+endfunction
+
+function! s:highlight_clear(match)
+	for m in a:match
+		silent! call matchdelete(m)
+	endfor
 endfunction
 
 " Return < 0 if x comes before y in buffer,
@@ -134,6 +174,8 @@ function! s:create_map(mode, lhs, rhs)
 		execute a:mode.'map '.a:lhs.' '.a:rhs
 	endif
 endfunction
+
+highlight default ExchangeRegion ctermfg=235 ctermbg=33
 
 nnoremap <silent> <Plug>(Exchange) :<C-u>set opfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
