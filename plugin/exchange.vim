@@ -1,4 +1,4 @@
-function! s:exchange(x, y)
+function! s:exchange(x, y, reverse)
 	let a = getpos("'a")
 	let b = getpos("'b")
 	let reg = getreg('"')
@@ -13,6 +13,12 @@ function! s:exchange(x, y)
 	call setpos("'b", a:x[3])
 	call setreg('"', a:y[0], a:y[1])
 	silent exe "normal! `a" . a:x[1] . "`b\"\"p"
+
+	if a:reverse
+		call cursor(a:x[2][1], a:x[2][2])
+	else
+		call cursor(a:y[2][1], a:y[2][2])
+	endif
 
 	call setpos("'a", a)
 	call setpos("'b", b)
@@ -54,16 +60,18 @@ function! s:exchange_set(type, ...)
 	else
 		let exchange1 = b:exchange
 		let exchange2 = s:exchange_get(a:type, a:0)
+		let reverse = 0
 
 		let cmp = s:compare(exchange1, exchange2)
 		if cmp == 0
 			echohl WarningMsg | echo "Exchange aborted: overlapping text" | echohl None
 			return s:exchange_clear()
 		elseif cmp > 0
+			let reverse = 1
 			let [exchange1, exchange2] = [exchange2, exchange1]
 		endif
 
-		call s:exchange(exchange1, exchange2)
+		call s:exchange(exchange1, exchange2, reverse)
 		call s:exchange_clear()
 	endif
 endfunction
