@@ -183,7 +183,7 @@ function! s:create_map(mode, lhs, rhs)
 	endif
 endfunction
 
-highlight default ExchangeRegion ctermfg=7 ctermbg=2 guifg=#ffffff guibg=#66cc00
+highlight default link ExchangeRegion IncSearch
 
 nnoremap <silent> <Plug>(Exchange) :<C-u>set opfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
