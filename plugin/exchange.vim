@@ -1,18 +1,20 @@
 function! s:exchange(x, y, reverse)
 	let a = getpos("'a")
 	let b = getpos("'b")
-	let reg = getreg('"')
-	let reg_mode = getregtype('"')
+	let reg_z = getreg('z')
+	let reg_z_mode = getregtype('z')
+	let reg_unnamed = getreg('"')
+	let reg_unnamed_mode = getregtype('"')
 
 	call setpos("'a", a:y[2])
 	call setpos("'b", a:y[3])
-	call setreg('"', a:x[0], a:x[1])
-	silent exe "normal! `a" . a:y[1] . "`b\"\"p"
+	call setreg('z', a:x[0], a:x[1])
+	silent exe "normal! `a" . a:y[1] . "`b\"zp"
 
 	call setpos("'a", a:x[2])
 	call setpos("'b", a:x[3])
-	call setreg('"', a:y[0], a:y[1])
-	silent exe "normal! `a" . a:x[1] . "`b\"\"p"
+	call setreg('z', a:y[0], a:y[1])
+	silent exe "normal! `a" . a:x[1] . "`b\"zp"
 
 	if a:reverse
 		call cursor(a:x[2][1], a:x[2][2])
@@ -22,7 +24,8 @@ function! s:exchange(x, y, reverse)
 
 	call setpos("'a", a)
 	call setpos("'b", b)
-	call setreg('"', reg, reg_mode)
+	call setreg('z', reg_z, reg_z_mode)
+	call setreg('"', reg_unnamed, reg_unnamed_mode)
 endfunction
 
 function! s:exchange_get(type, vis)
