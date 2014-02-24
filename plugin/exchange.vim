@@ -198,6 +198,6 @@ if exists('g:exchange_no_mappings')
 endif
 
 call s:create_map('n', 'cx', '<Plug>(Exchange)')
-call s:create_map('v', 'cx', '<Plug>(Exchange)')
+call s:create_map('v', 'X', '<Plug>(Exchange)')
 call s:create_map('n', 'cxc', '<Plug>(ExchangeClear)')
 call s:create_map('n', 'cxx', '<Plug>(ExchangeLine)')
