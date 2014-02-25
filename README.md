@@ -21,7 +21,7 @@ Clear any {motion} pending for exchange.
 
 ### Notes about the mappings
 
-* `cx` can also be used from visual mode, which is sometimes easier than coming
+* `X` can be used from visual mode, which is sometimes easier than coming
   up with the right {motion}
 * If you're using the same motion again (e.g. exchanging two words using
   `cxiw`), you can use `.` the second time.

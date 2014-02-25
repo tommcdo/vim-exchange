@@ -20,7 +20,6 @@ cx{motion}              Used in pairs.
                         exchanged. Any valid {motion} can be used.
                         SECOND USE: define the second region of text and
                         perform the exchange.
-                        Can also be used in |visual-mode|.
                         Note: If a region was defined accidentally, it can
                         be cleared with |cxc|
 
@@ -30,6 +29,9 @@ cxx                     Like |cx|, but for the current line. |linewise|
                                                 *cxc* *exchange-clear*
 cxc                     Clear any defined region of text (previously defined
                         by a |cx| command)
+
+                                                *v_X* *exchange-visual*
+{visal}X                Can be used in |visual-mode|.
 
 EXAMPLES                                        *exchange-examples*
 
