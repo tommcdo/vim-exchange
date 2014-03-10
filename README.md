@@ -33,6 +33,15 @@ To exchange two words, place your cursor on the first word and type `cxiw`.
 Then move to the second word and type `cxiw` again. Note: the {motion} used in
 the first and second use of `cx` don't have to be the same.
 
+More
+----
+
+Check out these other resources for more information:
+
+* [Swapping two regions of text with exchange.vim][e65]
+
+[e65]: http://vimcasts.org/episodes/swapping-two-regions-of-text-with-exchange-vim
+
 Troubleshooting
 ---------------
 
