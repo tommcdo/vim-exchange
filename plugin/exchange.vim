@@ -1,20 +1,20 @@
 function! s:exchange(x, y, reverse)
-	let mark_a = getpos("'a")
-	let mark_b = getpos("'b")
+	let mark_a = getpos("'y")
+	let mark_b = getpos("'t")
 	let reg_z = getreg('z')
 	let reg_z_mode = getregtype('z')
 	let reg_unnamed = getreg('"')
 	let reg_unnamed_mode = getregtype('"')
 
-	call setpos("'a", a:y[2])
-	call setpos("'b", a:y[3])
+	call setpos("'y", a:y[2])
+	call setpos("'t", a:y[3])
 	call setreg('z', a:x[0], a:x[1])
-	silent exe "normal! `a" . a:y[1] . "`b\"zp"
+	silent exe "normal! `y" . a:y[1] . "`t\"zp"
 
-	call setpos("'a", a:x[2])
-	call setpos("'b", a:x[3])
+	call setpos("'y", a:x[2])
+	call setpos("'t", a:x[3])
 	call setreg('z', a:y[0], a:y[1])
-	silent exe "normal! `a" . a:x[1] . "`b\"zp"
+	silent exe "normal! `y" . a:x[1] . "`t\"zp"
 
 	if a:reverse
 		call cursor(a:x[2][1], a:x[2][2])
@@ -22,8 +22,8 @@ function! s:exchange(x, y, reverse)
 		call cursor(a:y[2][1], a:y[2][2])
 	endif
 
-	call setpos("'a", mark_a)
-	call setpos("'b", mark_b)
+	call setpos("'y", mark_a)
+	call setpos("'t", mark_b)
 	call setreg('z', reg_z, reg_z_mode)
 	call setreg('"', reg_unnamed, reg_unnamed_mode)
 endfunction
