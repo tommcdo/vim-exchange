@@ -1,6 +1,6 @@
 function! s:exchange(x, y, reverse)
-	let a = getpos("'a")
-	let b = getpos("'b")
+	let mark_a = getpos("'a")
+	let mark_b = getpos("'b")
 	let reg_z = getreg('z')
 	let reg_z_mode = getregtype('z')
 	let reg_unnamed = getreg('"')
@@ -22,8 +22,8 @@ function! s:exchange(x, y, reverse)
 		call cursor(a:y[2][1], a:y[2][2])
 	endif
 
-	call setpos("'a", a)
-	call setpos("'b", b)
+	call setpos("'a", mark_a)
+	call setpos("'b", mark_b)
 	call setreg('z', reg_z, reg_z_mode)
 	call setreg('"', reg_unnamed, reg_unnamed_mode)
 endfunction
