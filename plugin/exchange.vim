@@ -3,6 +3,8 @@ function! s:exchange(x, y, reverse)
 	let reg_z_mode = getregtype('z')
 	let reg_unnamed = getreg('"')
 	let reg_unnamed_mode = getregtype('"')
+	let selection = &selection
+	set selection=inclusive
 
 	call setpos("'[", a:y[2])
 	call setpos("']", a:y[3])
@@ -20,6 +22,7 @@ function! s:exchange(x, y, reverse)
 		call cursor(a:y[2][1], a:y[2][2])
 	endif
 
+	let &selection = selection
 	call setreg('z', reg_z, reg_z_mode)
 	call setreg('"', reg_unnamed, reg_unnamed_mode)
 endfunction
