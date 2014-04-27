@@ -65,10 +65,10 @@ function! s:exchange_set(type, ...)
 		let reverse = 0
 
 		let cmp = s:compare(exchange1, exchange2)
-		if cmp == 0
+		if cmp == 'overlap'
 			echohl WarningMsg | echo "Exchange aborted: overlapping text" | echohl None
 			return s:exchange_clear()
-		elseif cmp > 0
+		elseif cmp == 'gt'
 			let reverse = 1
 			let [exchange1, exchange2] = [exchange2, exchange1]
 		endif
@@ -132,10 +132,10 @@ function! s:compare(x, y)
 	" Compare two blockwise regions.
 	if xm == "\<C-V>" && ym == "\<C-V>"
 		if s:intersects(xs, xe, ys, ye)
-			return 0
+			return 'overlap'
 		endif
 		let cmp = xs[2] - ys[2]
-		return cmp == 0 ? -1 : cmp
+		return cmp <= 0 ? 'lt' : 'gt'
 	endif
 
 	" TODO: Compare a blockwise region with a linewise or characterwise region.
@@ -145,10 +145,11 @@ function! s:compare(x, y)
 	" Compare two linewise or characterwise regions.
 	if (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
 		" x and y overlap in buffer.
-		return 0
+		return 'overlap'
 	endif
 
-	return s:compare_pos(xs, ys)
+	let cmp = s:compare_pos(xs, ys)
+	return cmp == 0 ? 'overlap' : cmp < 0 ? 'lt' : 'gt'
 endfunction
 
 function! s:compare_pos(x, y)
