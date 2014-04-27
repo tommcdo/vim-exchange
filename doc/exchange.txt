@@ -8,9 +8,10 @@ This plugin is only available if 'compatible' is not set.
 INTRODUCTION                                    *exchange*
 
 This plugin provides |operators| for exchanging text in two places. The main
-operator is |cx|, which is used in pairs. Each time it is used, it defines
-a region of text to to be exchanged; on the second use, the two defined regions
-are exchanged.
+operator is |cx|, which is used in pairs. Each time it is used, it defines a
+region of text to to be exchanged; on the second use, the two defined regions
+are exchanged. If one region is fully contained within the other, it replaces
+the containing region.
 
 MAPPINGS                                        *exchange-mappings*
 

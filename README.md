@@ -19,12 +19,14 @@ Like `cx`, but use the current line.
 
 Clear any {motion} pending for exchange.
 
-### Notes about the mappings
+### Some notes
 
 * `X` can be used from visual mode, which is sometimes easier than coming
   up with the right {motion}
 * If you're using the same motion again (e.g. exchanging two words using
   `cxiw`), you can use `.` the second time.
+* If one region is fully contained within the other, it will replace the
+  containing region.
 
 Example
 -------

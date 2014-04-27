@@ -1,4 +1,4 @@
-function! s:exchange(x, y, reverse)
+function! s:exchange(x, y, reverse, expand)
 	let reg_z = getreg('z')
 	let reg_z_mode = getregtype('z')
 	let reg_unnamed = getreg('"')
@@ -11,10 +11,12 @@ function! s:exchange(x, y, reverse)
 	call setreg('z', a:x[0], a:x[1])
 	silent exe "normal! `[" . a:y[1] . "`]\"zp"
 
-	call setpos("'[", a:x[2])
-	call setpos("']", a:x[3])
-	call setreg('z', a:y[0], a:y[1])
-	silent exe "normal! `[" . a:x[1] . "`]\"zp"
+	if !a:expand
+		call setpos("'[", a:x[2])
+		call setpos("']", a:x[3])
+		call setreg('z', a:y[0], a:y[1])
+		silent exe "normal! `[" . a:x[1] . "`]\"zp"
+	endif
 
 	if a:reverse
 		call cursor(a:x[2][1], a:x[2][2])
@@ -63,17 +65,23 @@ function! s:exchange_set(type, ...)
 		let exchange1 = b:exchange
 		let exchange2 = s:exchange_get(a:type, a:0)
 		let reverse = 0
+		let expand = 0
 
 		let cmp = s:compare(exchange1, exchange2)
 		if cmp == 'overlap'
 			echohl WarningMsg | echo "Exchange aborted: overlapping text" | echohl None
 			return s:exchange_clear()
+		elseif cmp == 'outer'
+			let [expand, reverse] = [1, 1]
+			let [exchange1, exchange2] = [exchange2, exchange1]
+		elseif cmp == 'inner'
+			let expand = 1
 		elseif cmp == 'gt'
 			let reverse = 1
 			let [exchange1, exchange2] = [exchange2, exchange1]
 		endif
 
-		call s:exchange(exchange1, exchange2, reverse)
+		call s:exchange(exchange1, exchange2, reverse, expand)
 		call s:exchange_clear()
 	endif
 endfunction
@@ -143,7 +151,11 @@ function! s:compare(x, y)
 	"       When the characterwise region spans only one line, it is like blockwise.
 
 	" Compare two linewise or characterwise regions.
-	if (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
+	if s:compare_pos(xs, ys) <= 0 && s:compare_pos(xe, ye) >= 0
+		return 'outer'
+	elseif s:compare_pos(ys, xs) <= 0 && s:compare_pos(ye, xe) >= 0
+		return 'inner'
+	elseif (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
 		" x and y overlap in buffer.
 		return 'overlap'
 	endif
