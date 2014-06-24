@@ -9,9 +9,9 @@ INTRODUCTION                                    *exchange*
 
 This plugin provides |operators| for exchanging text in two places. The main
 operator is |cx|, which is used in pairs. Each time it is used, it defines a
-region of text to to be exchanged; on the second use, the two defined regions
-are exchanged. If one region is fully contained within the other, it replaces
-the containing region.
+region of text to be exchanged; on the second use, the two defined regions are
+exchanged. If one region is fully contained within the other, it replaces the
+containing region.
 
 MAPPINGS                                        *exchange-mappings*
 
@@ -32,7 +32,7 @@ cxc                     Clear any defined region of text (previously defined
                         by a |cx| command)
 
                                                 *v_X* *exchange-visual*
-{visal}X                Can be used in |visual-mode|.
+{Visual}X               Can be used in |visual-mode|.
 
 EXAMPLES                                        *exchange-examples*
 
