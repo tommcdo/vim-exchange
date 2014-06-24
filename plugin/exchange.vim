@@ -32,28 +32,33 @@ endfunction
 function! s:exchange_get(type, vis)
 	let reg = getreg('"')
 	let reg_mode = getregtype('"')
-	let selection = &selection
-	let &selection = 'inclusive'
 	if a:vis
 		let type = a:type
 		let [start, end] = s:store_pos("'<", "'>")
-		silent exe "normal! `<" . a:type . "`>y"
-	elseif a:type == 'line'
-		let type = 'V'
-		let [start, end] = s:store_pos("'[", "']")
-		silent exe "normal! '[V']y"
-	elseif a:type == 'block'
-		let type = "\<C-V>"
-		let [start, end] = s:store_pos("'[", "']")
-		silent exe "normal! `[\<C-V>`]y"
+		silent normal! gvy
+		if &selection ==# 'exclusive' && start != end
+			let end[2] -= len(matchstr(@@, '\_.$'))
+		endif
 	else
-		let type = 'v'
-		let [start, end] = s:store_pos("'[", "']")
-		silent exe "normal! `[v`]y"
+		let selection = &selection
+		let &selection = 'inclusive'
+		if a:type == 'line'
+			let type = 'V'
+			let [start, end] = s:store_pos("'[", "']")
+			silent exe "normal! '[V']y"
+		elseif a:type == 'block'
+			let type = "\<C-V>"
+			let [start, end] = s:store_pos("'[", "']")
+			silent exe "normal! `[\<C-V>`]y"
+		else
+			let type = 'v'
+			let [start, end] = s:store_pos("'[", "']")
+			silent exe "normal! `[v`]y"
+		endif
+		let &selection = selection
 	endif
 	let text = getreg('@')
 	call setreg('"', reg, reg_mode)
-	let &selection = selection
 	return [text, type, start, end]
 endfunction
 
