@@ -55,7 +55,7 @@ To change the default mappings, simply provide your own mappings to the
 commands below. The default mappings are as follows:
 
     nmap cx <Plug>(Exchange)
-    vmap cx <Plug>(Exchange)
+    xmap cx <Plug>(Exchange)
     nmap cxc <Plug>(ExchangeClear)
     nmap cxx <Plug>(ExchangeLine)
 
