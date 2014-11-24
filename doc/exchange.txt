@@ -34,6 +34,11 @@ cxc                     Clear any defined region of text (previously defined
                                                 *v_X* *exchange-visual*
 {Visual}X               Can be used in |visual-mode|.
 
+COMMANDS                                        *exchange-commands*
+
+                                                *exchange-:ExchangeClear*
+:ExchangeClear          Ex-command version of |cxc|.
+
 EXAMPLES                                        *exchange-examples*
 
 In the text below, we will exchange everything inside the parentheses with

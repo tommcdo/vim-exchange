@@ -210,6 +210,8 @@ vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
 nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set opfunc=<SID>exchange_set<CR>g@_
 
+command! ExchangeClear call s:exchange_clear()
+
 if exists('g:exchange_no_mappings')
 	finish
 endif
