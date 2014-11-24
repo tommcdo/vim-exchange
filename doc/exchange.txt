@@ -36,7 +36,7 @@ cxc                     Clear any defined region of text (previously defined
 
 COMMANDS                                        *exchange-commands*
 
-                                                *:ExchangeClear*
+                                                *exchange-:ExchangeClear*
 :ExchangeClear          Ex-command version of |cxc|.
 
 EXAMPLES                                        *exchange-examples*
