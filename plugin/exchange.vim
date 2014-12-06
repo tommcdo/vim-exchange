@@ -3,6 +3,10 @@ function! s:exchange(x, y, reverse, expand)
 	let reg_z_mode = getregtype('z')
 	let reg_unnamed = getreg('"')
 	let reg_unnamed_mode = getregtype('"')
+	let reg_star = getreg('*')
+	let reg_star_mode = getregtype('*')
+	let reg_plus = getreg('+')
+	let reg_plus_mode = getregtype('+')
 	let selection = &selection
 	set selection=inclusive
 
@@ -27,11 +31,17 @@ function! s:exchange(x, y, reverse, expand)
 	let &selection = selection
 	call setreg('z', reg_z, reg_z_mode)
 	call setreg('"', reg_unnamed, reg_unnamed_mode)
+	call setreg('*', reg_star, reg_star_mode)
+	call setreg('+', reg_plus, reg_plus_mode)
 endfunction
 
 function! s:exchange_get(type, vis)
 	let reg = getreg('"')
 	let reg_mode = getregtype('"')
+	let reg_star = getreg('*')
+	let reg_star_mode = getregtype('*')
+	let reg_plus = getreg('+')
+	let reg_plus_mode = getregtype('+')
 	if a:vis
 		let type = a:type
 		let [start, end] = s:store_pos("'<", "'>")
@@ -59,6 +69,8 @@ function! s:exchange_get(type, vis)
 	endif
 	let text = getreg('@')
 	call setreg('"', reg, reg_mode)
+	call setreg('*', reg_star, reg_star_mode)
+	call setreg('+', reg_plus, reg_plus_mode)
 	return [text, type, start, end]
 endfunction
 
