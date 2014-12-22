@@ -1,12 +1,8 @@
 function! s:exchange(x, y, reverse, expand)
-	let reg_z = getreg('z')
-	let reg_z_mode = getregtype('z')
-	let reg_unnamed = getreg('"')
-	let reg_unnamed_mode = getregtype('"')
-	let reg_star = getreg('*')
-	let reg_star_mode = getregtype('*')
-	let reg_plus = getreg('+')
-	let reg_plus_mode = getregtype('+')
+	let reg_z = s:save_reg('z')
+	let reg_unnamed = s:save_reg('"')
+	let reg_star = s:save_reg('*')
+	let reg_plus = s:save_reg('+')
 	let selection = &selection
 	set selection=inclusive
 
@@ -29,19 +25,16 @@ function! s:exchange(x, y, reverse, expand)
 	endif
 
 	let &selection = selection
-	call setreg('z', reg_z, reg_z_mode)
-	call setreg('"', reg_unnamed, reg_unnamed_mode)
-	call setreg('*', reg_star, reg_star_mode)
-	call setreg('+', reg_plus, reg_plus_mode)
+	call s:restore_reg('z', reg_z)
+	call s:restore_reg('"', reg_unnamed)
+	call s:restore_reg('*', reg_star)
+	call s:restore_reg('+', reg_plus)
 endfunction
 
 function! s:exchange_get(type, vis)
-	let reg = getreg('"')
-	let reg_mode = getregtype('"')
-	let reg_star = getreg('*')
-	let reg_star_mode = getregtype('*')
-	let reg_plus = getreg('+')
-	let reg_plus_mode = getregtype('+')
+	let reg = s:save_reg('"')
+	let reg_star = s:save_reg('*')
+	let reg_plus = s:save_reg('+')
 	if a:vis
 		let type = a:type
 		let [start, end] = s:store_pos("'<", "'>")
@@ -68,9 +61,9 @@ function! s:exchange_get(type, vis)
 		let &selection = selection
 	endif
 	let text = getreg('@')
-	call setreg('"', reg, reg_mode)
-	call setreg('*', reg_star, reg_star_mode)
-	call setreg('+', reg_plus, reg_plus_mode)
+	call s:restore_reg('"', reg)
+	call s:restore_reg('*', reg_star)
+	call s:restore_reg('+', reg_plus)
 	return [text, type, start, end]
 endfunction
 
@@ -109,6 +102,14 @@ function! s:exchange_clear()
 		call s:highlight_clear(b:exchange_matches)
 		unlet b:exchange_matches
 	endif
+endfunction
+
+function! s:save_reg(name)
+	return [getreg(a:name), getregtype(a:name)]
+endfunction
+
+function! s:restore_reg(name, reg)
+	call setreg(a:name, a:reg[0], a:reg[1])
 endfunction
 
 function! s:highlight(exchange)
