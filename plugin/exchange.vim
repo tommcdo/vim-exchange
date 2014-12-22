@@ -109,7 +109,7 @@ function! s:save_reg(name)
 endfunction
 
 function! s:restore_reg(name, reg)
-	call setreg(a:name, a:reg[0], a:reg[1])
+	silent! call setreg(a:name, a:reg[0], a:reg[1])
 endfunction
 
 function! s:highlight(exchange)
