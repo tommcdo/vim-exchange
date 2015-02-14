@@ -1,3 +1,5 @@
+let s:enable_highlighting = 1
+
 function! s:exchange(x, y, reverse, expand)
 	let reg_z = s:save_reg('z')
 	let reg_unnamed = s:save_reg('"')
@@ -143,13 +145,22 @@ endfunction
 
 function! s:highlight_region(region)
 	let pattern = '\%'.a:region[0].'l\%'.a:region[1].'v\_.\{-}\%'.a:region[2].'l\(\%>'.a:region[3].'v\|$\)'
-	return matchadd('ExchangeRegion', pattern)
+	return matchadd('_exchange_region', pattern)
 endfunction
 
 function! s:highlight_clear(match)
 	for m in a:match
 		silent! call matchdelete(m)
 	endfor
+endfunction
+
+function! s:highlight_toggle(...)
+	if a:0 == 1
+		let s:enable_highlighting = a:1
+	else
+		let s:enable_highlighting = !s:enable_highlighting
+	endif
+	execute 'highlight link _exchange_region' (s:enable_highlighting ? 'ExchangeRegion' : 'None')
 endfunction
 
 " Return < 0 if x comes before y in buffer,
@@ -227,6 +238,10 @@ nnoremap <silent> <Plug>(Exchange) :<C-u>set opfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
 nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set opfunc=<SID>exchange_set<CR>g@_
+
+command! XchangeHighlightToggle call s:highlight_toggle()
+command! XchangeHighlightEnable call s:highlight_toggle(1)
+command! XchangeHighlightDisable call s:highlight_toggle(0)
 
 command! ExchangeClear call s:exchange_clear(1)
 command! XchangeClear call s:exchange_clear()
