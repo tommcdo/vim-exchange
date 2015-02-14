@@ -98,11 +98,14 @@ function! s:exchange_set(type, ...)
 	endif
 endfunction
 
-function! s:exchange_clear()
+function! s:exchange_clear(...)
 	unlet! b:exchange
 	if exists('b:exchange_matches')
 		call s:highlight_clear(b:exchange_matches)
 		unlet b:exchange_matches
+	endif
+	if a:0
+		echohl WarningMsg | echo ":ExchangeClear will be deprecated in favor of :XchangeClear" | echohl None
 	endif
 endfunction
 
@@ -225,7 +228,8 @@ vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
 nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set opfunc=<SID>exchange_set<CR>g@_
 
-command! ExchangeClear call s:exchange_clear()
+command! ExchangeClear call s:exchange_clear(1)
+command! XchangeClear call s:exchange_clear()
 
 if exists('g:exchange_no_mappings')
 	finish
