@@ -243,6 +243,8 @@ command! XchangeHighlightToggle call s:highlight_toggle()
 command! XchangeHighlightEnable call s:highlight_toggle(1)
 command! XchangeHighlightDisable call s:highlight_toggle(0)
 
+XchangeHighlightEnable
+
 command! ExchangeClear call s:exchange_clear(1)
 command! XchangeClear call s:exchange_clear()
 
