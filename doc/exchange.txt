@@ -75,6 +75,14 @@ g:exchange_no_mappings ~
 
 If this variable is defined, the default mappings will not be created.
 
+                                                *g:exchange_indent*
+g:exchange_indent ~
+
+If this variable is defined and non-zero, linewise exchanges will swap
+indents. Alternatively, setting the option to '==' will re-indent the
+exchanged text with |==|. This behavior can be configured per buffer by
+setting b:exchange_indent.
+
 ISSUES AND TODO                                 *exchange-issues*
                                                 *exchange-todo*
 
