@@ -8,6 +8,13 @@ function! s:exchange(x, y, reverse, expand)
 	let selection = &selection
 	set selection=inclusive
 
+	let indent = exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
+		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0))
+	if indent
+		let xindent = matchstr(getline(nextnonblank(a:y[2][1])), '^\s*')
+		let yindent = matchstr(getline(nextnonblank(a:x[2][1])), '^\s*')
+	endif
+
 	call setpos("'[", a:y[2])
 	call setpos("']", a:y[3])
 	call setreg('z', a:x[0], a:x[1])
@@ -20,13 +27,10 @@ function! s:exchange(x, y, reverse, expand)
 		silent exe "normal! `[" . a:x[1] . "`]\"zp"
 	endif
 
-	if exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
-			\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0))
+	if indent
 		let xlines = 1 + a:x[3][1] - a:x[2][1]
-		let xindent = matchstr(getline(nextnonblank(a:x[2][1])), '^\s*')
-		let ylines = 1 + a:y[3][1] - a:y[2][1]
-		let yindent = matchstr(getline(nextnonblank(a:y[2][1])), '^\s*')
-		if a:y[1] ==# 'V'
+		let ylines = a:expand ? xlines : 1 + a:y[3][1] - a:y[2][1]
+		if !a:expand && a:y[1] ==# 'V'
 			call s:reindent(a:x[2][1], ylines, yindent)
 		endif
 		if a:x[1] ==# 'V'
