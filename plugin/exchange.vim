@@ -52,7 +52,7 @@ function! s:exchange(x, y, reverse, expand)
 endfunction
 
 function! s:reindent(start, lines, new_indent)
-	if g:exchange_indent == '=='
+	if (exists('b:exchange_indent') ? b:exchange_indent : g:exchange_indent) == '=='
 		let lnum = nextnonblank(a:start)
 		let line = getline(lnum)
 		execute "silent normal! " . lnum . "G=="
