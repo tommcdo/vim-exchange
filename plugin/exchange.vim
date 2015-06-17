@@ -8,8 +8,9 @@ function! s:exchange(x, y, reverse, expand)
 	let selection = &selection
 	set selection=inclusive
 
-	let indent = exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
-		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0))
+	let indent = (exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
+		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0)))
+		\ && a:x[1] ==# 'V' && a:y[1] ==# 'V'
 	if indent
 		let xindent = matchstr(getline(nextnonblank(a:y[2][1])), '^\s*')
 		let yindent = matchstr(getline(nextnonblank(a:x[2][1])), '^\s*')
@@ -30,12 +31,10 @@ function! s:exchange(x, y, reverse, expand)
 	if indent
 		let xlines = 1 + a:x[3][1] - a:x[2][1]
 		let ylines = a:expand ? xlines : 1 + a:y[3][1] - a:y[2][1]
-		if !a:expand && a:y[1] ==# 'V'
+		if !a:expand
 			call s:reindent(a:x[2][1], ylines, yindent)
 		endif
-		if a:x[1] ==# 'V'
-			call s:reindent(a:y[2][1] - xlines + ylines, xlines, xindent)
-		endif
+		call s:reindent(a:y[2][1] - xlines + ylines, xlines, xindent)
 	endif
 
 	if a:reverse
