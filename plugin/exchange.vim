@@ -151,14 +151,11 @@ function! s:exchange_set(type, ...)
 	endif
 endfunction
 
-function! s:exchange_clear(...)
+function! s:exchange_clear()
 	unlet! b:exchange
 	if exists('b:exchange_matches')
 		call s:highlight_clear(b:exchange_matches)
 		unlet b:exchange_matches
-	endif
-	if a:0
-		echohl WarningMsg | echo ":ExchangeClear will be deprecated in favor of :XchangeClear" | echohl None
 	endif
 endfunction
 
@@ -300,7 +297,6 @@ command! XchangeHighlightDisable call s:highlight_toggle(0)
 
 XchangeHighlightEnable
 
-command! ExchangeClear call s:exchange_clear(1)
 command! XchangeClear call s:exchange_clear()
 
 if exists('g:exchange_no_mappings')
