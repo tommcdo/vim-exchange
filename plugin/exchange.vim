@@ -8,6 +8,14 @@ function! s:exchange(x, y, reverse, expand)
 	let selection = &selection
 	set selection=inclusive
 
+	let indent = (exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
+		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0)))
+		\ && a:x[1] ==# 'V' && a:y[1] ==# 'V'
+	if indent
+		let xindent = matchstr(getline(nextnonblank(a:y[2][1])), '^\s*')
+		let yindent = matchstr(getline(nextnonblank(a:x[2][1])), '^\s*')
+	endif
+
 	call setpos("'[", a:y[2])
 	call setpos("']", a:y[3])
 	call setreg('z', a:x[0], a:x[1])
@@ -18,6 +26,15 @@ function! s:exchange(x, y, reverse, expand)
 		call setpos("']", a:x[3])
 		call setreg('z', a:y[0], a:y[1])
 		silent exe "normal! `[" . a:x[1] . "`]\"zp"
+	endif
+
+	if indent
+		let xlines = 1 + a:x[3][1] - a:x[2][1]
+		let ylines = a:expand ? xlines : 1 + a:y[3][1] - a:y[2][1]
+		if !a:expand
+			call s:reindent(a:x[2][1], ylines, yindent)
+		endif
+		call s:reindent(a:y[2][1] - xlines + ylines, xlines, xindent)
 	endif
 
 	if a:reverse
@@ -31,6 +48,40 @@ function! s:exchange(x, y, reverse, expand)
 	call s:restore_reg('"', reg_unnamed)
 	call s:restore_reg('*', reg_star)
 	call s:restore_reg('+', reg_plus)
+endfunction
+
+function! s:reindent(start, lines, new_indent)
+	if (exists('b:exchange_indent') ? b:exchange_indent : g:exchange_indent) == '=='
+		let lnum = nextnonblank(a:start)
+		let line = getline(lnum)
+		execute "silent normal! " . lnum . "G=="
+		let new_indent = matchstr(getline(lnum), '^\s*')
+		call setline(a:start, line)
+	else
+		let new_indent = a:new_indent
+	endif
+	let indent = matchstr(getline(nextnonblank(a:start)), '^\s*')
+	if strdisplaywidth(new_indent) > strdisplaywidth(indent)
+		for lnum in range(a:start, a:start + a:lines - 1)
+			if lnum =~ '\S'
+				call setline(lnum, new_indent . getline(lnum)[len(indent):])
+			endif
+		endfor
+	elseif strdisplaywidth(new_indent) < strdisplaywidth(indent)
+		let can_dedent = 1
+		for lnum in range(a:start, a:start + a:lines - 1)
+			if stridx(getline(lnum), new_indent) != 0 && nextnonblank(lnum) == lnum
+				let can_dedent = 0
+			endif
+		endfor
+		if can_dedent
+			for lnum in range(a:start, a:start + a:lines - 1)
+				if stridx(getline(lnum), new_indent) == 0
+					call setline(lnum, new_indent . getline(lnum)[len(indent):])
+				endif
+			endfor
+		endif
+	endif
 endfunction
 
 function! s:exchange_get(type, vis)
