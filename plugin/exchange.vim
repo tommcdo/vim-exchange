@@ -163,7 +163,11 @@ function! s:exchange_clear(...)
 endfunction
 
 function! s:save_reg(name)
-	return [getreg(a:name), getregtype(a:name)]
+	try
+		return [getreg(a:name), getregtype(a:name)]
+	catch /.*/
+		return ['', '']
+	endtry
 endfunction
 
 function! s:restore_reg(name, reg)
