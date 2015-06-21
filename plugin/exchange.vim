@@ -10,37 +10,37 @@ function! s:exchange(x, y, reverse, expand)
 
 	let indent = (exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
 		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0)))
-		\ && a:x[1] ==# 'V' && a:y[1] ==# 'V'
+		\ && a:x.type==# 'V' && a:y.type ==# 'V'
 	if indent
-		let xindent = matchstr(getline(nextnonblank(a:y[2][1])), '^\s*')
-		let yindent = matchstr(getline(nextnonblank(a:x[2][1])), '^\s*')
+		let xindent = matchstr(getline(nextnonblank(a:y.start.line)), '^\s*')
+		let yindent = matchstr(getline(nextnonblank(a:x.start.line)), '^\s*')
 	endif
 
-	call setpos("'[", a:y[2])
-	call setpos("']", a:y[3])
-	call setreg('z', a:x[0], a:x[1])
-	silent exe "normal! `[" . a:y[1] . "`]\"zp"
+	call s:setpos("'[", a:y.start)
+	call s:setpos("']", a:y.end)
+	call setreg('z', a:x.text, a:x.type)
+	silent exe "normal! `[" . a:y.type . "`]\"zp"
 
 	if !a:expand
-		call setpos("'[", a:x[2])
-		call setpos("']", a:x[3])
-		call setreg('z', a:y[0], a:y[1])
-		silent exe "normal! `[" . a:x[1] . "`]\"zp"
+		call s:setpos("'[", a:x.start)
+		call s:setpos("']", a:x.end)
+		call setreg('z', a:y.text, a:y.type)
+		silent exe "normal! `[" . a:x.type . "`]\"zp"
 	endif
 
 	if indent
-		let xlines = 1 + a:x[3][1] - a:x[2][1]
-		let ylines = a:expand ? xlines : 1 + a:y[3][1] - a:y[2][1]
+		let xlines = 1 + a:x.end.line - a:x.start.line
+		let ylines = a:expand ? xlines : 1 + a:y.end.line - a:y.start.line
 		if !a:expand
-			call s:reindent(a:x[2][1], ylines, yindent)
+			call s:reindent(a:x.start.line, ylines, yindent)
 		endif
-		call s:reindent(a:y[2][1] - xlines + ylines, xlines, xindent)
+		call s:reindent(a:y.start.line - xlines + ylines, xlines, xindent)
 	endif
 
 	if a:reverse
-		call cursor(a:x[2][1], a:x[2][2])
+		call cursor(a:x.start.line, a:x.start.column)
 	else
-		call cursor(a:y[2][1], a:y[2][2])
+		call cursor(a:y.start.line, a:y.start.column)
 	endif
 
 	let &selection = selection
@@ -93,7 +93,7 @@ function! s:exchange_get(type, vis)
 		let [start, end] = s:store_pos("'<", "'>")
 		silent normal! gvy
 		if &selection ==# 'exclusive' && start != end
-			let end[2] -= len(matchstr(@@, '\_.$'))
+			let end.column -= len(matchstr(@@, '\_.$'))
 		endif
 	else
 		let selection = &selection
@@ -117,7 +117,12 @@ function! s:exchange_get(type, vis)
 	call s:restore_reg('"', reg)
 	call s:restore_reg('*', reg_star)
 	call s:restore_reg('+', reg_plus)
-	return [text, type, start, end]
+	return {
+	\	'text': text,
+	\	'type': type,
+	\	'start': start,
+	\	'end': s:apply_type(end, type)
+	\ }
 endfunction
 
 function! s:exchange_set(type, ...)
@@ -172,23 +177,22 @@ function! s:restore_reg(name, reg)
 endfunction
 
 function! s:highlight(exchange)
-	let [text, type, start, end] = a:exchange
 	let regions = []
-	if type == "\<C-V>"
-		let blockstartcol = virtcol([start[1], start[2]])
-		let blockendcol = virtcol([end[1], end[2]])
+	if a:exchange.type == "\<C-V>"
+		let blockstartcol = virtcol([a:exchange.start.line, a:exchange.start.column])
+		let blockendcol = virtcol([a:exchange.end.line, a:exchange.end.column])
 		if blockstartcol > blockendcol
 			let [blockstartcol, blockendcol] = [blockendcol, blockstartcol]
 		endif
-		let regions += map(range(start[1], end[1]), '[v:val, blockstartcol, v:val, blockendcol]')
+		let regions += map(range(a:exchange.start.line, a:exchange.end.line), '[v:val, blockstartcol, v:val, blockendcol]')
 	else
-		let [startline, endline] = [start[1], end[1]]
-		if type ==# 'v'
-			let startcol = virtcol([startline, start[2]])
-			let endcol = virtcol([endline, end[2]])
-		elseif type ==# 'V'
+		let [startline, endline] = [a:exchange.start.line, a:exchange.end.line]
+		if a:exchange.type ==# 'v'
+			let startcol = virtcol([a:exchange.start.line, a:exchange.start.column])
+			let endcol = virtcol([a:exchange.end.line, a:exchange.end.column])
+		elseif a:exchange.type ==# 'V'
 			let startcol = 1
-			let endcol = virtcol([end[1], '$'])
+			let endcol = virtcol([a:exchange.end.line, '$'])
 		endif
 		let regions += [[startline, startcol, endline, endcol]]
 	endif
@@ -219,16 +223,12 @@ endfunction
 "        = 0 if x and y overlap in buffer,
 "        > 0 if x comes after y in buffer
 function! s:compare(x, y)
-	let [xs, xe, xm, ys, ye, ym] = [a:x[2], a:x[3], a:x[1], a:y[2], a:y[3], a:y[1]]
-	let xe = s:apply_mode(xe, xm)
-	let ye = s:apply_mode(ye, ym)
-
 	" Compare two blockwise regions.
-	if xm == "\<C-V>" && ym == "\<C-V>"
-		if s:intersects(xs, xe, ys, ye)
+	if a:x.type == "\<C-V>" && a:y.type == "\<C-V>"
+		if s:intersects(a:x, a:y)
 			return 'overlap'
 		endif
-		let cmp = xs[2] - ys[2]
+		let cmp = a:x.start.column - a:y.start.column
 		return cmp <= 0 ? 'lt' : 'gt'
 	endif
 
@@ -237,45 +237,62 @@ function! s:compare(x, y)
 	"       When the characterwise region spans only one line, it is like blockwise.
 
 	" Compare two linewise or characterwise regions.
-	if s:compare_pos(xs, ys) <= 0 && s:compare_pos(xe, ye) >= 0
+	if s:compare_pos(a:x.start, a:y.start) <= 0 && s:compare_pos(a:x.end, a:y.end) >= 0
 		return 'outer'
-	elseif s:compare_pos(ys, xs) <= 0 && s:compare_pos(ye, xe) >= 0
+	elseif s:compare_pos(a:y.start, a:x.start) <= 0 && s:compare_pos(a:y.end, a:x.end) >= 0
 		return 'inner'
-	elseif (s:compare_pos(xs, ye) <= 0 && s:compare_pos(ys, xe) <= 0) || (s:compare_pos(ys, xe) <= 0 && s:compare_pos(xs, ye) <= 0)
+	elseif (s:compare_pos(a:x.start, a:y.end) <= 0 && s:compare_pos(a:y.start, a:x.end) <= 0)
+	\	|| (s:compare_pos(a:y.start, a:x.end) <= 0 && s:compare_pos(a:x.start, a:y.end) <= 0)
 		" x and y overlap in buffer.
 		return 'overlap'
 	endif
 
-	let cmp = s:compare_pos(xs, ys)
+	let cmp = s:compare_pos(a:x.start, a:y.start)
 	return cmp == 0 ? 'overlap' : cmp < 0 ? 'lt' : 'gt'
 endfunction
 
 function! s:compare_pos(x, y)
-	if a:x[1] == a:y[1]
-		return a:x[2] - a:y[2]
+	if a:x.line == a:y.line
+		return a:x.column - a:y.column
 	else
-		return a:x[1] - a:y[1]
+		return a:x.line - a:y.line
 	endif
 endfunction
 
-function! s:intersects(xs, xe, ys, ye)
-	if a:xe[2] < a:ys[2] || a:xe[1] < a:ys[1] || a:xs[2] > a:ye[2] || a:xs[1] > a:ye[1]
+function! s:intersects(x, y)
+	if a:x.end.column < a:y.start.column || a:x.end.line < a:y.start.line
+	\	|| a:x.start.column > a:y.end.column || a:x.start.line > a:y.end.line
 		return 0
 	else
 		return 1
 	endif
 endfunction
 
-function! s:apply_mode(pos, mode)
+function! s:apply_type(pos, type)
 	let pos = a:pos
-	if a:mode ==# 'V'
-		let pos[2] = col([pos[1], '$'])
+	if a:type ==# 'V'
+		let pos.column = col([pos.line, '$'])
 	endif
 	return pos
 endfunction
 
 function! s:store_pos(start, end)
-	return [getpos(a:start), getpos(a:end)]
+	return [s:getpos(a:start), s:getpos(a:end)]
+endfunction
+
+function! s:getpos(mark)
+	let pos = getpos(a:mark)
+	let result = {}
+	return {
+	\	'buffer': pos[0],
+	\	'line': pos[1],
+	\	'column': pos[2],
+	\	'offset': pos[3]
+	\ }
+endfunction
+
+function! s:setpos(mark, pos)
+	call setpos(a:mark, [a:pos.buffer, a:pos.line, a:pos.column, a:pos.offset])
 endfunction
 
 function! s:create_map(mode, lhs, rhs)
