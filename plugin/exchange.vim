@@ -19,13 +19,13 @@ function! s:exchange(x, y, reverse, expand)
 	call s:setpos("'[", a:y.start)
 	call s:setpos("']", a:y.end)
 	call setreg('z', a:x.text, a:x.type)
-	silent exe "normal! `[" . a:y.type . "`]\"zp"
+	silent execute "normal! `[" . a:y.type . "`]\"zp"
 
 	if !a:expand
 		call s:setpos("'[", a:x.start)
 		call s:setpos("']", a:x.end)
 		call setreg('z', a:y.text, a:y.type)
-		silent exe "normal! `[" . a:x.type . "`]\"zp"
+		silent execute "normal! `[" . a:x.type . "`]\"zp"
 	endif
 
 	if indent
@@ -101,15 +101,15 @@ function! s:exchange_get(type, vis)
 		if a:type == 'line'
 			let type = 'V'
 			let [start, end] = s:store_pos("'[", "']")
-			silent exe "normal! '[V']y"
+			silent execute "normal! '[V']y"
 		elseif a:type == 'block'
 			let type = "\<C-V>"
 			let [start, end] = s:store_pos("'[", "']")
-			silent exe "normal! `[\<C-V>`]y"
+			silent execute "normal! `[\<C-V>`]y"
 		else
 			let type = 'v'
 			let [start, end] = s:store_pos("'[", "']")
-			silent exe "normal! `[v`]y"
+			silent execute "normal! `[v`]y"
 		endif
 		let &selection = selection
 	endif
@@ -303,10 +303,10 @@ endfunction
 
 highlight default link ExchangeRegion IncSearch
 
-nnoremap <silent> <Plug>(Exchange) :<C-u>set opfunc=<SID>exchange_set<CR>g@
+nnoremap <silent> <Plug>(Exchange) :<C-u>set operatorfunc=<SID>exchange_set<CR>g@
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
-nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set opfunc=<SID>exchange_set<CR>g@_
+nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set operatorfunc=<SID>exchange_set<CR>g@_
 
 command! XchangeHighlightToggle call s:highlight_toggle()
 command! XchangeHighlightEnable call s:highlight_toggle(1)
