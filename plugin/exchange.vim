@@ -16,6 +16,8 @@ function! s:exchange(x, y, reverse, expand)
 		let yindent = matchstr(getline(nextnonblank(a:x.start.line)), '^\s*')
 	endif
 
+	let view = winsaveview()
+
 	call s:setpos("'[", a:y.start)
 	call s:setpos("']", a:y.end)
 	call setreg('z', a:x.text, a:x.type)
@@ -36,6 +38,8 @@ function! s:exchange(x, y, reverse, expand)
 		endif
 		call s:reindent(a:y.start.line - xlines + ylines, xlines, xindent)
 	endif
+
+	call winrestview(view)
 
 	if a:reverse
 		call cursor(a:x.start.line, a:x.start.column)
