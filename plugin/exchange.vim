@@ -8,9 +8,8 @@ function! s:exchange(x, y, reverse, expand)
 	let selection = &selection
 	set selection=inclusive
 
-	let indent = (exists("b:exchange_indent") ? (b:exchange_indent !~ 0) :
-		\ (exists("g:exchange_indent") && (g:exchange_indent !~ 0)))
-		\ && a:x.type==# 'V' && a:y.type ==# 'V'
+	let indent = s:get_setting('exchange_indent', 0) != 0 && a:x.type ==# 'V' && a:y.type ==# 'V'
+
 	if indent
 		let xindent = matchstr(getline(nextnonblank(a:y.start.line)), '^\s*')
 		let yindent = matchstr(getline(nextnonblank(a:x.start.line)), '^\s*')
@@ -67,7 +66,7 @@ function! s:fix_cursor(x, y, reverse)
 endfunction
 
 function! s:reindent(start, lines, new_indent)
-	if (exists('b:exchange_indent') ? b:exchange_indent : g:exchange_indent) == '=='
+	if s:get_setting('exchange_indent', 0) == '=='
 		let lnum = nextnonblank(a:start)
 		let line = getline(lnum)
 		execute "silent normal! " . lnum . "G=="
@@ -315,6 +314,10 @@ function! s:create_map(mode, lhs, rhs)
 	if !hasmapto(a:rhs, a:mode)
 		execute a:mode.'map '.a:lhs.' '.a:rhs
 	endif
+endfunction
+
+function! s:get_setting(setting, default)
+	return get(b:, a:setting, get(g:, a:setting, a:default))
 endfunction
 
 highlight default link ExchangeRegion IncSearch
