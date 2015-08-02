@@ -70,7 +70,7 @@ function! s:reindent(start, lines, new_indent)
 	if s:get_setting('exchange_indent', 1) == '=='
 		let lnum = nextnonblank(a:start)
 		if lnum == 0 || lnum > a:start + a:lines - 1
-				return
+			return
 		endif
 		let line = getline(lnum)
 		execute "silent normal! " . lnum . "G=="
