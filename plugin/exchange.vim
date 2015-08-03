@@ -8,7 +8,8 @@ function! s:exchange(x, y, reverse, expand)
 	let selection = &selection
 	set selection=inclusive
 
-	let indent = s:get_setting('exchange_indent', 1) != 0 && a:x.type ==# 'V' && a:y.type ==# 'V'
+	" Compare using =~ because "'==' != 0" returns 0
+	let indent = s:get_setting('exchange_indent', 1) !~ 0 && a:x.type ==# 'V' && a:y.type ==# 'V'
 
 	if indent
 		let xindent = matchstr(getline(nextnonblank(a:y.start.line)), '^\s*')
@@ -68,6 +69,9 @@ endfunction
 function! s:reindent(start, lines, new_indent)
 	if s:get_setting('exchange_indent', 1) == '=='
 		let lnum = nextnonblank(a:start)
+		if lnum == 0 || lnum > a:start + a:lines - 1
+			return
+		endif
 		let line = getline(lnum)
 		execute "silent normal! " . lnum . "G=="
 		let new_indent = matchstr(getline(lnum), '^\s*')
