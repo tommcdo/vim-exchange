@@ -75,7 +75,7 @@ function! s:reindent(start, lines, new_indent)
 		let line = getline(lnum)
 		execute "silent normal! " . lnum . "G=="
 		let new_indent = matchstr(getline(lnum), '^\s*')
-		call setline(a:start, line)
+		call setline(lnum, line)
 	else
 		let new_indent = a:new_indent
 	endif
