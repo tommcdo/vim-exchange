@@ -326,10 +326,10 @@ endfunction
 
 highlight default link ExchangeRegion IncSearch
 
-nnoremap <silent> <Plug>(Exchange) :<C-u>set operatorfunc=<SID>exchange_set<CR>g@
+nnoremap <silent> <expr> <Plug>(Exchange) ':<C-u>set operatorfunc=<SID>exchange_set<CR>'.v:count1.'g@'
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
-nnoremap <silent> <Plug>(ExchangeLine) :<C-u>set operatorfunc=<SID>exchange_set<CR>g@_
+nnoremap <silent> <expr> <Plug>(ExchangeLine) ':<C-u>set operatorfunc=<SID>exchange_set<CR>'.v:count1.'g@_'
 
 command! XchangeHighlightToggle call s:highlight_toggle()
 command! XchangeHighlightEnable call s:highlight_toggle(1)
