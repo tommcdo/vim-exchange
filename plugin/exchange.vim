@@ -59,7 +59,7 @@ function! s:fix_cursor(x, y, reverse)
 		if a:x.start.line == a:y.start.line
 			let horizontal_offset = a:x.end.column - a:y.end.column
 			call cursor(a:x.start.line, a:x.start.column - horizontal_offset)
-		else
+		elseif (a:x.end.line - a:x.start.line) != (a:y.end.line - a:y.start.line)
 			let vertical_offset = a:x.end.line - a:y.end.line
 			call cursor(a:x.start.line - vertical_offset, a:x.start.column)
 		endif
