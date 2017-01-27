@@ -46,6 +46,20 @@ Check out these other resources for more information:
 
 [e65]: http://vimcasts.org/episodes/swapping-two-regions-of-text-with-exchange-vim
 
+Other text editors
+------------------
+
+Exchange.vim has been ported by third parties to work with Vim emulators in
+other text editors.
+
+* **Emacs**: [evil-exchange][emacs] by [Dewdrops][dd]
+* **Atom**: [vim-mode-plus-exchange][atom] by [Dillon Kearns][dk]
+
+[emacs]: https://melpa.org/#/evil-exchange
+[atom]: https://atom.io/packages/vim-mode-plus-exchange
+[dd]: https://github.com/Dewdrops
+[dk]: https://github.com/dillonkearns
+
 Troubleshooting
 ---------------
 
