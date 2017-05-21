@@ -339,6 +339,8 @@ XchangeHighlightEnable
 
 command! XchangeClear call s:exchange_clear()
 
+command! ExchangeClear call s:exchange_clear()
+
 if exists('g:exchange_no_mappings')
 	finish
 endif
