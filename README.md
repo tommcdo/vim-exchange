@@ -54,11 +54,14 @@ other text editors.
 
 * **Emacs**: [evil-exchange][emacs] by [Dewdrops][dd]
 * **Atom**: [vim-mode-plus-exchange][atom] by [Dillon Kearns][dk]
+* **Zsh**: [zsh-viexchange][zsh] by [Oliver Kiddle][ok]
 
 [emacs]: https://melpa.org/#/evil-exchange
 [atom]: https://atom.io/packages/vim-mode-plus-exchange
+[zsh]: https://github.com/okapia/vim-exchange
 [dd]: https://github.com/Dewdrops
 [dk]: https://github.com/dillonkearns
+[ok]: https://github.com/okapia
 
 Troubleshooting
 ---------------
