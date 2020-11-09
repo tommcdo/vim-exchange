@@ -55,13 +55,16 @@ other text editors.
 * **Emacs**: [evil-exchange][emacs] by [Dewdrops][dd]
 * **Atom**: [vim-mode-plus-exchange][atom] by [Dillon Kearns][dk]
 * **Zsh**: [zsh-viexchange][zsh] by [Oliver Kiddle][ok]
+* **IntelliJ**: [IdeaVim exchange extension][ij] by [Alexey Gerasimov][ft]
 
 [emacs]: https://melpa.org/#/evil-exchange
 [atom]: https://atom.io/packages/vim-mode-plus-exchange
 [zsh]: https://github.com/okapia/zsh-viexchange
+[ij]: https://github.com/JetBrains/ideavim/blob/master/doc/emulated-plugins.md#exchange
 [dd]: https://github.com/Dewdrops
 [dk]: https://github.com/dillonkearns
 [ok]: https://github.com/okapia
+[ft]: https://github.com/fan-tom
 
 Troubleshooting
 ---------------
