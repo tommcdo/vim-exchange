@@ -235,7 +235,15 @@ function! s:highlight_toggle(...)
 	else
 		let s:enable_highlighting = !s:enable_highlighting
 	endif
-	execute 'highlight link _exchange_region' (s:enable_highlighting ? 'ExchangeRegion' : 'None')
+	augroup vim_exchange
+		autocmd!
+		if s:enable_highlighting
+			autocmd ColorScheme * highlight link _exchange_region ExchangeRegion
+		else
+			highlight link _exchange_region None
+		endif
+	augroup END
+	doautocmd vim_exchange ColorScheme
 endfunction
 
 " Return < 0 if x comes before y in buffer,
