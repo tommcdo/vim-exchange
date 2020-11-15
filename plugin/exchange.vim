@@ -339,13 +339,13 @@ vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)
 nnoremap <silent> <Plug>(ExchangeClear) :<C-u>call <SID>exchange_clear()<CR>
 nnoremap <silent> <expr> <Plug>(ExchangeLine) ':<C-u>set operatorfunc=<SID>exchange_set<CR>'.(v:count1 == 1 ? '' : v:count1).'g@_'
 
-command! XchangeHighlightToggle call s:highlight_toggle()
-command! XchangeHighlightEnable call s:highlight_toggle(1)
-command! XchangeHighlightDisable call s:highlight_toggle(0)
+command! -bar XchangeHighlightToggle call s:highlight_toggle()
+command! -bar XchangeHighlightEnable call s:highlight_toggle(1)
+command! -bar XchangeHighlightDisable call s:highlight_toggle(0)
 
 XchangeHighlightEnable
 
-command! XchangeClear call s:exchange_clear()
+command! -bar XchangeClear call s:exchange_clear()
 
 if exists('g:exchange_no_mappings')
 	finish
