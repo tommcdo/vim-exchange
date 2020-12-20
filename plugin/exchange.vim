@@ -333,7 +333,6 @@ function! s:get_setting(setting, default)
 endfunction
 
 highlight default link ExchangeRegion IncSearch
-highlight default link _exchange_region ExchangeRegion
 
 nnoremap <silent> <expr> <Plug>(Exchange) ':<C-u>set operatorfunc=<SID>exchange_set<CR>'.(v:count1 == 1 ? '' : v:count1).'g@'
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
