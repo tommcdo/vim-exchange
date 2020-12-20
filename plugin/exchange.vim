@@ -243,7 +243,7 @@ function! s:highlight_toggle(...)
 			highlight link _exchange_region None
 		endif
 	augroup END
-	doautocmd vim_exchange ColorScheme
+	silent doautocmd vim_exchange ColorScheme
 endfunction
 
 " Return < 0 if x comes before y in buffer,
