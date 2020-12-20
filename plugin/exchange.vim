@@ -235,7 +235,15 @@ function! s:highlight_toggle(...)
 	else
 		let s:enable_highlighting = !s:enable_highlighting
 	endif
-	execute 'highlight link _exchange_region' (s:enable_highlighting ? 'ExchangeRegion' : 'None')
+	augroup vim_exchange
+		autocmd!
+		if s:enable_highlighting
+			autocmd ColorScheme * highlight link _exchange_region ExchangeRegion
+		else
+			highlight link _exchange_region None
+		endif
+	augroup END
+	silent doautocmd vim_exchange ColorScheme
 endfunction
 
 " Return < 0 if x comes before y in buffer,
@@ -325,7 +333,6 @@ function! s:get_setting(setting, default)
 endfunction
 
 highlight default link ExchangeRegion IncSearch
-highlight default link _exchange_region ExchangeRegion
 
 nnoremap <silent> <expr> <Plug>(Exchange) ':<C-u>set operatorfunc=<SID>exchange_set<CR>'.(v:count1 == 1 ? '' : v:count1).'g@'
 vnoremap <silent> <Plug>(Exchange) :<C-u>call <SID>exchange_set(visualmode(), 1)<CR>
