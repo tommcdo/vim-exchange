@@ -60,7 +60,7 @@ other text editors.
 [emacs]: https://melpa.org/#/evil-exchange
 [atom]: https://atom.io/packages/vim-mode-plus-exchange
 [zsh]: https://github.com/okapia/zsh-viexchange
-[ij]: https://github.com/JetBrains/ideavim/blob/master/doc/emulated-plugins.md#exchange
+[ij]: https://github.com/JetBrains/ideavim/wiki/Emulated-plugins#exchange
 [dd]: https://github.com/Dewdrops
 [dk]: https://github.com/dillonkearns
 [ok]: https://github.com/okapia
